@@ -1,36 +1,44 @@
 import os
 
-path_to_file = r'C:\Users\Hp\Documents\dataset folders\autism\Autism_Data.arff'
+path_to_file = r"C:\Users\Hp\Documents\dataset folders\autism\Autism_Data.arff"
 
-def toCsv(content):
-    data = False
-    header = ""
-    newContent = []
+def arff_to_csv(arff_path):
+    csv_lines = []
+    header = []
+    data_section = False
 
-    for line in content:
-        line = line.strip()
-        if not data:
+    with open(arff_path, "r") as f:
+        for line in f:
+            line = line.strip()
+
+            # Skip empty lines and comments
+            if not line or line.startswith("%"):
+                continue
+
+            # Read attributes
             if line.lower().startswith("@attribute"):
                 parts = line.split()
-                columnName = parts[1]
-                header += columnName + ","
+                attr_name = parts[1].strip("'\"")  # remove quotes
+                header.append(attr_name)
+
+            # Detect data section
             elif line.lower().startswith("@data"):
-                data = True
-                header = header[:-1] + "\n"
-                newContent.append(header)
-        else:
-            if line and not line.startswith("%"):
-                newContent.append(line + "\n")
+                csv_lines.append(",".join(header) + "\n")
+                data_section = True
 
-    return newContent
+            # Read actual data
+            elif data_section:
+                csv_lines.append(line + "\n")
+
+    return csv_lines
 
 
-with open(path_to_file, "r") as inFile:
-    content = inFile.readlines()
-    name, _ = os.path.splitext(path_to_file)
-    new = toCsv(content)
+# Convert file
+csv_content = arff_to_csv(path_to_file)
 
-with open(name + ".csv", "w") as outFile:
-    outFile.writelines(new)
+output_csv = path_to_file.replace(".arff", ".csv")
+with open(output_csv, "w") as out:
+    out.writelines(csv_content)
 
-print("ARFF → CSV conversion complete")
+print("✅ CSV generated successfully:", output_csv)
+print("Rows written:", len(csv_content) - 1)
