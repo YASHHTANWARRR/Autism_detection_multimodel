@@ -1,31 +1,27 @@
+import os
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
 
-# Load dataset
-csv_path = r"C:\Users\Hp\Documents\dataset folders\autism\Autism_Data.csv"
-df = pd.read_csv(csv_path)
+BASE_DIR = r"C:\Users\Hp\Documents\dataset folders\autism"
+splits = ["train", "val", "test"]
 
-# Target column
-target_col = "Class/ASD"
+for split in splits:
+    split_dir = os.path.join(BASE_DIR, split)
 
-# Encode categorical columns
-for col in df.select_dtypes(include=["object"]).columns:
-    df[col] = LabelEncoder().fit_transform(df[col])
+    if not os.path.exists(split_dir):
+        raise FileNotFoundError(f"❌ Folder not found: {split_dir}")
 
-# Split features and labels
-X = df.drop(columns=[target_col])
-y = df[target_col]
+    data = {}
 
-# Train / Val / Test split
-X_train, X_temp, y_train, y_temp = train_test_split(
-    X, y, test_size=0.3, stratify=y, random_state=42
-)
+    for feature in os.listdir(split_dir):
+        feature_dir = os.path.join(split_dir, feature)
 
-X_val, X_test, y_val, y_test = train_test_split(
-    X_temp, y_temp, test_size=0.5, stratify=y_temp, random_state=42
-)
+        if not os.path.isdir(feature_dir):
+            continue
 
-print("Train:", X_train.shape)
-print("Val:", X_val.shape)
-print("Test:", X_test.shape)
+        files = os.listdir(feature_dir)
+        if len(files) != 1:
+            raise ValueError(f"⚠ {feature_dir} should contain exactly ONE file")
+
+        file_path = os.path.join(feature_dir, files[0])
+
+        col_data_
