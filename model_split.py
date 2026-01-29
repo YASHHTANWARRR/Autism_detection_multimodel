@@ -9,8 +9,8 @@ from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
 #dataset 
-input_dir="C:\Users\Hp\Documents\dataset folders\autism\Autism_Data.arff"
-output_dir="C:\Users\Hp\Documents\dataset folders\autism\output"
+input_dir=r'C:\Users\Hp\Documents\dataset folders\autism\Autism_Data.arff'
+output_dir=r'C:\Users\Hp\Documents\dataset folders\autism\output'
 
 split =['train','val','test']
 classes=['A1_Score','A2_Score'
