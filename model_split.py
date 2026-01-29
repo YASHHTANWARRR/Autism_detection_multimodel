@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 from tqdm import tqdm
 
 #dataset 
-input_dir=r'C:\Users\Hp\Documents\dataset folders\autism\Autism_Data.arff'
+input_dir=r'C:\Users\Hp\Documents\dataset folders\autism\Autism_Data.csv'
 output_dir=r'C:\Users\Hp\Documents\dataset folders\autism\output'
 
 split =['train','val','test']
